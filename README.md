@@ -4,11 +4,7 @@ Weather Watch is a lightweight weather forecasting app that pulls public forecas
 
 ## Live App
 
-Open the public app here:
-
-```text
-https://xxqcarlospxx.github.io/weather-watch/
-```
+Open the public app here: [Weather Watch](https://xxqcarlospxx.github.io/weather-watch/).
 
 ## Features
 
@@ -49,6 +45,9 @@ You can also open `index.html` directly in a browser, but using a local server g
 
 ```text
 .
+|-- .github/
+|   `-- workflows/
+|       `-- pages.yml
 |-- app.js
 |-- index.html
 |-- styles.css
