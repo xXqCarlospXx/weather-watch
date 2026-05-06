@@ -1,6 +1,8 @@
 const form = document.querySelector("#search-form");
 const locationInput = document.querySelector("#location-input");
+const locationPanel = document.querySelector("#location-panel");
 const currentLocationButton = document.querySelector("#current-location");
+const themeToggle = document.querySelector("#theme-toggle");
 const statusMessage = document.querySelector("#status-message");
 const alertPanel = document.querySelector("#alert-panel");
 const dailyList = document.querySelector("#daily-list");
@@ -57,6 +59,25 @@ const iconText = {
 };
 
 const highIntensityCodes = new Set([55, 57, 65, 67, 75, 82, 86, 95, 96, 99]);
+const popularLocations = [
+  { name: "Hong Kong", latitude: 22.2783, longitude: 114.1747, timezone: "Asia/Hong_Kong" },
+  { name: "Tokyo, Japan", latitude: 35.6895, longitude: 139.6917, timezone: "Asia/Tokyo" },
+  { name: "Singapore", latitude: 1.2897, longitude: 103.8501, timezone: "Asia/Singapore" },
+  { name: "London, England, United Kingdom", latitude: 51.5072, longitude: -0.1276, timezone: "Europe/London" },
+  { name: "New York, New York, United States", latitude: 40.7128, longitude: -74.006, timezone: "America/New_York" }
+];
+let suggestionTimer;
+
+function formatTemp(value) {
+  return `${value}\u00b0C`;
+}
+
+function applyTheme(theme) {
+  document.body.dataset.theme = theme;
+  themeToggle.setAttribute("aria-pressed", String(theme === "dark"));
+  themeToggle.setAttribute("aria-label", theme === "dark" ? "Switch to light mode" : "Switch to dark mode");
+  localStorage.setItem("weather-watch-theme", theme);
+}
 
 function formatDate(dateString, options) {
   return new Intl.DateTimeFormat(undefined, options).format(new Date(`${dateString}T12:00:00`));
@@ -111,9 +132,19 @@ async function fetchJson(url) {
 }
 
 async function geocodeLocation(query) {
+  const locations = await searchLocations(query);
+
+  if (locations.length) {
+    return locations[0];
+  }
+
+  return geocodeWithNominatim(query);
+}
+
+async function searchLocations(query) {
   const params = new URLSearchParams({
     name: query,
-    count: "1",
+    count: "8",
     language: "en",
     format: "json"
   });
@@ -122,19 +153,18 @@ async function geocodeLocation(query) {
     const data = await fetchJson(`https://geocoding-api.open-meteo.com/v1/search?${params}`);
 
     if (data.results?.length) {
-      const [result] = data.results;
-      return {
+      return data.results.map((result) => ({
         name: [result.name, result.admin1, result.country].filter(Boolean).join(", "),
         latitude: result.latitude,
         longitude: result.longitude,
         timezone: result.timezone || "auto"
-      };
+      }));
     }
   } catch {
-    // Fall through to the backup public geocoder below.
+    return [];
   }
 
-  return geocodeWithNominatim(query);
+  return [];
 }
 
 async function geocodeWithNominatim(query) {
@@ -238,14 +268,66 @@ function renderCurrent(place, data, days) {
   const todayIntensity = classifyIntensity(days[0]);
 
   placeLabel.textContent = place;
-  currentTemp.innerHTML = `${Math.round(current.temperature_2m)} <span class="temp-unit">deg C</span>`;
-  currentSummary.textContent = `${summary}. Today's range is ${days[0].minTemp} deg to ${days[0].maxTemp} deg with ${days[0].rainChance}% rain chance.`;
+  currentTemp.innerHTML = `${Math.round(current.temperature_2m)}<span class="temp-unit">&deg;C</span>`;
+  currentSummary.textContent = `${summary}. Today's range is ${formatTemp(days[0].minTemp)} to ${formatTemp(days[0].maxTemp)} with ${days[0].rainChance}% rain chance.`;
   currentIcon.textContent = iconText[icon] || "SKY";
   windValue.textContent = `${Math.round(current.wind_speed_10m)} km/h`;
   rainValue.textContent = `${days[0].rainChance}%`;
   humidityValue.textContent = `${Math.round(current.relative_humidity_2m)}%`;
   intensityValue.textContent = todayIntensity.level;
   intensityValue.style.color = todayIntensity.level === "High" ? "var(--danger)" : "var(--accent-dark)";
+}
+
+function hideLocationPanel() {
+  locationPanel.classList.add("is-hidden");
+  locationInput.setAttribute("aria-expanded", "false");
+}
+
+function renderLocationPanel(locations, message = "") {
+  locationInput.setAttribute("aria-expanded", "true");
+  locationPanel.classList.remove("is-hidden");
+
+  if (!locations.length) {
+    locationPanel.innerHTML = `<p class="location-empty">${message || "No matching locations found."}</p>`;
+    return;
+  }
+
+  locationPanel.innerHTML = "";
+
+  locations.forEach((location, index) => {
+    const [primary, ...details] = location.name.split(",");
+    const button = document.createElement("button");
+    const title = document.createElement("strong");
+    const subtitle = document.createElement("span");
+
+    button.className = "location-option";
+    button.type = "button";
+    button.role = "option";
+    button.dataset.locationIndex = String(index);
+    title.textContent = primary.trim();
+    subtitle.textContent = details.join(",").trim() || "Forecast location";
+    button.append(title, subtitle);
+    button.addEventListener("click", async () => {
+      const location = locations[Number(button.dataset.locationIndex)];
+      locationInput.value = location.name;
+      hideLocationPanel();
+      await loadForecastForLocation(location);
+    });
+    locationPanel.append(button);
+  });
+}
+
+async function updateLocationSuggestions() {
+  const query = locationInput.value.trim();
+
+  if (query.length < 2) {
+    renderLocationPanel(popularLocations);
+    return;
+  }
+
+  renderLocationPanel([], "Searching locations...");
+  const locations = await searchLocations(query);
+  renderLocationPanel(locations, "No matching locations found.");
 }
 
 function renderDaily(days) {
@@ -258,8 +340,8 @@ function renderDaily(days) {
         <p class="day-name">${formatDate(day.date, { weekday: "short", month: "short", day: "numeric" })}</p>
         <div class="day-icon" aria-hidden="true">${iconText[icon] || "SKY"}</div>
         <div class="day-temp">
-          <strong>${day.maxTemp} deg</strong>
-          <span>${day.minTemp} deg</span>
+          <strong>${formatTemp(day.maxTemp)}</strong>
+          <span>${formatTemp(day.minTemp)}</span>
         </div>
         <div class="day-meta">
           <span>${summary}</span>
@@ -303,9 +385,25 @@ form.addEventListener("submit", async (event) => {
 
   try {
     const location = await geocodeLocation(query);
+    hideLocationPanel();
     await loadForecastForLocation(location);
   } catch (error) {
     setStatus(error.message || "Location search failed.", true);
+  }
+});
+
+locationInput.addEventListener("focus", () => {
+  updateLocationSuggestions();
+});
+
+locationInput.addEventListener("input", () => {
+  clearTimeout(suggestionTimer);
+  suggestionTimer = setTimeout(updateLocationSuggestions, 220);
+});
+
+document.addEventListener("click", (event) => {
+  if (!form.contains(event.target)) {
+    hideLocationPanel();
   }
 });
 
@@ -331,6 +429,12 @@ currentLocationButton.addEventListener("click", () => {
     { enableHighAccuracy: true, timeout: 10000, maximumAge: 300000 }
   );
 });
+
+themeToggle.addEventListener("click", () => {
+  applyTheme(document.body.dataset.theme === "dark" ? "light" : "dark");
+});
+
+applyTheme(localStorage.getItem("weather-watch-theme") || "light");
 
 geocodeLocation(locationInput.value)
   .then(loadForecastForLocation)

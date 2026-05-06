@@ -3,6 +3,11 @@
   font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   --bg: #eef3f6;
   --panel: #ffffff;
+  --panel-surface: rgba(255, 255, 255, 0.92);
+  --field-bg: #f8fbfc;
+  --day-bg: #f8fbfc;
+  --alert-bg: #fff7ed;
+  --alert-text: #7c2d12;
   --ink: #18212b;
   --muted: #64727f;
   --line: #d8e1e8;
@@ -13,6 +18,26 @@
   --sun: #f8b84e;
   --rain: #3973ac;
   --shadow: 0 20px 60px rgba(32, 45, 56, 0.12);
+}
+
+body[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #0e171d;
+  --panel: #15232c;
+  --panel-surface: rgba(21, 35, 44, 0.94);
+  --field-bg: #101c23;
+  --day-bg: #111f27;
+  --alert-bg: #2f1813;
+  --alert-text: #fed7aa;
+  --ink: #edf6f9;
+  --muted: #a8b6c3;
+  --line: #31424f;
+  --accent: #2dd4bf;
+  --accent-dark: #7dd3fc;
+  --danger: #fb7185;
+  --sun: #f59e0b;
+  --rain: #2563eb;
+  --shadow: 0 20px 60px rgba(0, 0, 0, 0.34);
 }
 
 * {
@@ -51,8 +76,8 @@ input {
 .metric-card,
 .daily-section,
 .alert-panel {
-  background: rgba(255, 255, 255, 0.92);
-  border: 1px solid rgba(216, 225, 232, 0.9);
+  background: var(--panel-surface);
+  border: 1px solid var(--line);
   border-radius: 8px;
   box-shadow: var(--shadow);
 }
@@ -86,7 +111,70 @@ h1 {
   line-height: 0.92;
 }
 
+.title-block {
+  display: grid;
+  gap: 18px;
+}
+
+.theme-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  width: 92px;
+  min-height: 44px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 5px;
+  color: var(--accent-dark);
+  background: var(--field-bg);
+  cursor: pointer;
+}
+
+.theme-toggle:hover,
+.theme-toggle:focus-visible {
+  border-color: var(--accent);
+}
+
+.theme-icon {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  color: var(--muted);
+  transition: background 160ms ease, color 160ms ease, transform 160ms ease;
+}
+
+.theme-icon svg {
+  width: 19px;
+  height: 19px;
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 2;
+}
+
+.sun-icon {
+  background: var(--accent);
+  color: #ffffff;
+  box-shadow: 0 8px 18px rgba(15, 118, 110, 0.22);
+}
+
+body[data-theme="dark"] .sun-icon {
+  background: transparent;
+  color: var(--muted);
+  box-shadow: none;
+}
+
+body[data-theme="dark"] .moon-icon {
+  background: var(--accent);
+  color: #062b28;
+  box-shadow: 0 8px 18px rgba(45, 212, 191, 0.22);
+}
+
 .search-form {
+  position: relative;
   display: grid;
   gap: 8px;
 }
@@ -103,6 +191,10 @@ h1 {
   gap: 10px;
 }
 
+.location-field {
+  position: relative;
+}
+
 .search-row input {
   width: 100%;
   min-height: 48px;
@@ -110,7 +202,7 @@ h1 {
   border-radius: 8px;
   padding: 0 14px;
   color: var(--ink);
-  background: #f8fbfc;
+  background: var(--field-bg);
 }
 
 .search-row button,
@@ -133,10 +225,58 @@ h1 {
   background: var(--accent-dark);
 }
 
+.location-panel {
+  position: absolute;
+  z-index: 10;
+  right: 0;
+  left: 0;
+  top: calc(100% + 8px);
+  max-height: 250px;
+  overflow-y: auto;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 8px;
+  background: var(--panel);
+  box-shadow: var(--shadow);
+}
+
+.location-option {
+  display: grid;
+  width: 100%;
+  min-height: 48px;
+  border: 0;
+  border-radius: 6px;
+  padding: 9px 10px;
+  color: var(--ink);
+  background: transparent;
+  cursor: pointer;
+  text-align: left;
+}
+
+.location-option:hover,
+.location-option:focus-visible {
+  background: var(--field-bg);
+}
+
+.location-option strong {
+  font-size: 0.95rem;
+}
+
+.location-option span {
+  color: var(--muted);
+  font-size: 0.82rem;
+}
+
+.location-empty {
+  margin: 0;
+  padding: 12px;
+  color: var(--muted);
+}
+
 .ghost-button {
   border: 1px solid var(--line);
   color: var(--accent-dark);
-  background: #f8fbfc;
+  background: var(--field-bg);
 }
 
 .status-row {
@@ -156,7 +296,7 @@ h1 {
   margin-top: 18px;
   padding: 18px 20px;
   border-color: rgba(185, 28, 28, 0.25);
-  background: #fff7ed;
+  background: var(--alert-bg);
 }
 
 .alert-panel h2 {
@@ -167,7 +307,7 @@ h1 {
 
 .alert-panel p {
   margin: 0;
-  color: #7c2d12;
+  color: var(--alert-text);
 }
 
 .is-hidden {
@@ -286,12 +426,12 @@ h1 {
   border: 1px solid var(--line);
   border-radius: 8px;
   padding: 16px;
-  background: #f8fbfc;
+  background: var(--day-bg);
 }
 
 .day-card.high {
   border-color: rgba(185, 28, 28, 0.38);
-  background: #fff7ed;
+  background: var(--alert-bg);
 }
 
 .day-name {
@@ -381,6 +521,11 @@ h1 {
   .metric-grid,
   .daily-list {
     grid-template-columns: 1fr;
+  }
+
+  .location-panel {
+    position: static;
+    margin-top: 8px;
   }
 
   .current-card {

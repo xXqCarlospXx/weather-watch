@@ -9,7 +9,9 @@ Open the public app here: [Weather Watch](https://xxqcarlospxx.github.io/weather
 ## Features
 
 - Search forecasts by city or town.
+- Pick a result from a scrollable location suggestion panel.
 - Use browser geolocation for the current location.
+- Toggle between light mode and dark mode.
 - Display current temperature, wind, rain chance, humidity, and intensity.
 - Show a 7-day forecast with daily weather, temperature range, rain, and wind.
 - Flag high-intensity days based on severe weather codes, strong wind, heavy precipitation, extreme heat, and freezing temperatures.
@@ -61,8 +63,8 @@ A forecast day is marked high intensity when one or more of these signals is pre
 - Severe weather code from the forecast API.
 - Wind speed of at least 50 km/h.
 - Precipitation of at least 25 mm.
-- Maximum temperature of at least 35 deg C.
-- Minimum temperature of -5 deg C or below.
+- Maximum temperature of at least 35°C.
+- Minimum temperature of -5°C or below.
 
 ## Notes
 

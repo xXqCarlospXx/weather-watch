@@ -12,26 +12,52 @@
     <main class="app-shell">
       <section class="forecast-workspace" aria-labelledby="app-title">
         <div class="search-panel">
-          <div>
+          <div class="title-block">
             <p class="eyebrow">Public API forecast</p>
             <h1 id="app-title">Weather Watch</h1>
+            <button id="theme-toggle" class="theme-toggle" type="button" aria-label="Switch to dark mode" aria-pressed="false">
+              <span class="theme-icon sun-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" focusable="false">
+                  <circle cx="12" cy="12" r="4"></circle>
+                  <path d="M12 2v2"></path>
+                  <path d="M12 20v2"></path>
+                  <path d="m4.93 4.93 1.41 1.41"></path>
+                  <path d="m17.66 17.66 1.41 1.41"></path>
+                  <path d="M2 12h2"></path>
+                  <path d="M20 12h2"></path>
+                  <path d="m6.34 17.66-1.41 1.41"></path>
+                  <path d="m19.07 4.93-1.41 1.41"></path>
+                </svg>
+              </span>
+              <span class="theme-icon moon-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" focusable="false">
+                  <path d="M20.7 14.1A8.6 8.6 0 0 1 9.9 3.3 8.6 8.6 0 1 0 20.7 14.1Z"></path>
+                </svg>
+              </span>
+            </button>
           </div>
 
           <form id="search-form" class="search-form">
             <label for="location-input">Location</label>
-            <div class="search-row">
-              <input
-                id="location-input"
-                name="location"
-                type="search"
-                autocomplete="off"
-                placeholder="Search city or town"
-                value="Hong Kong"
-                required
-              >
-              <button type="submit" aria-label="Search forecast">
-                <span>Search</span>
-              </button>
+            <div class="location-field">
+              <div class="search-row">
+                <input
+                  id="location-input"
+                  name="location"
+                  type="search"
+                  autocomplete="off"
+                  aria-autocomplete="list"
+                  aria-controls="location-panel"
+                  aria-expanded="false"
+                  placeholder="Search city or town"
+                  value="Hong Kong"
+                  required
+                >
+                <button type="submit" aria-label="Search forecast">
+                  <span>Search</span>
+                </button>
+              </div>
+              <div id="location-panel" class="location-panel is-hidden" role="listbox" aria-label="Location suggestions"></div>
             </div>
           </form>
 
