@@ -2,6 +2,14 @@
 
 Weather Watch is a lightweight weather forecasting app that pulls public forecast data and highlights high-intensity conditions that may need attention.
 
+## Live App
+
+Open the public app here:
+
+```text
+https://xxqcarlospxx.github.io/weather-watch/
+```
+
 ## Features
 
 - Search forecasts by city or town.
