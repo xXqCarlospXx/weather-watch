@@ -1,0 +1,399 @@
+:root {
+  color-scheme: light;
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --bg: #eef3f6;
+  --panel: #ffffff;
+  --ink: #18212b;
+  --muted: #64727f;
+  --line: #d8e1e8;
+  --accent: #0f766e;
+  --accent-dark: #115e59;
+  --warm: #c2410c;
+  --danger: #b91c1c;
+  --sun: #f8b84e;
+  --rain: #3973ac;
+  --shadow: 0 20px 60px rgba(32, 45, 56, 0.12);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  overflow-x: hidden;
+  background:
+    linear-gradient(140deg, rgba(15, 118, 110, 0.16), transparent 36%),
+    linear-gradient(20deg, rgba(248, 184, 78, 0.18), transparent 32%),
+    var(--bg);
+  color: var(--ink);
+}
+
+button,
+input {
+  font: inherit;
+}
+
+.app-shell {
+  min-height: 100vh;
+  padding: 28px;
+}
+
+.forecast-workspace {
+  width: 100%;
+  max-width: 1180px;
+  margin: 0 auto;
+}
+
+.search-panel,
+.current-card,
+.metric-card,
+.daily-section,
+.alert-panel {
+  background: rgba(255, 255, 255, 0.92);
+  border: 1px solid rgba(216, 225, 232, 0.9);
+  border-radius: 8px;
+  box-shadow: var(--shadow);
+}
+
+.search-panel {
+  display: grid;
+  grid-template-columns: minmax(200px, 0.8fr) minmax(280px, 1.2fr);
+  gap: 24px;
+  align-items: end;
+  padding: 24px;
+}
+
+.eyebrow {
+  margin: 0 0 8px;
+  color: var(--accent-dark);
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0;
+  text-transform: uppercase;
+}
+
+h1,
+h2,
+p {
+  margin-top: 0;
+}
+
+h1 {
+  margin-bottom: 0;
+  font-size: clamp(2.25rem, 6vw, 4.5rem);
+  line-height: 0.92;
+}
+
+.search-form {
+  display: grid;
+  gap: 8px;
+}
+
+.search-form label {
+  color: var(--muted);
+  font-size: 0.95rem;
+  font-weight: 700;
+}
+
+.search-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 10px;
+}
+
+.search-row input {
+  width: 100%;
+  min-height: 48px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 0 14px;
+  color: var(--ink);
+  background: #f8fbfc;
+}
+
+.search-row button,
+.ghost-button {
+  min-height: 48px;
+  border: 0;
+  border-radius: 8px;
+  padding: 0 18px;
+  cursor: pointer;
+  font-weight: 800;
+}
+
+.search-row button {
+  color: #fff;
+  background: var(--accent);
+}
+
+.search-row button:hover,
+.search-row button:focus-visible {
+  background: var(--accent-dark);
+}
+
+.ghost-button {
+  border: 1px solid var(--line);
+  color: var(--accent-dark);
+  background: #f8fbfc;
+}
+
+.status-row {
+  grid-column: 1 / -1;
+  display: flex;
+  gap: 14px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+#status-message {
+  margin: 0;
+  color: var(--muted);
+}
+
+.alert-panel {
+  margin-top: 18px;
+  padding: 18px 20px;
+  border-color: rgba(185, 28, 28, 0.25);
+  background: #fff7ed;
+}
+
+.alert-panel h2 {
+  margin-bottom: 8px;
+  color: var(--danger);
+  font-size: 1.05rem;
+}
+
+.alert-panel p {
+  margin: 0;
+  color: #7c2d12;
+}
+
+.is-hidden {
+  display: none;
+}
+
+.current-grid {
+  display: grid;
+  grid-template-columns: minmax(280px, 1.2fr) minmax(280px, 0.8fr);
+  gap: 18px;
+  margin-top: 18px;
+}
+
+.current-card {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  min-height: 270px;
+  padding: 28px;
+}
+
+.current-card h2 {
+  display: flex;
+  gap: 12px;
+  align-items: baseline;
+  margin-bottom: 10px;
+  font-size: clamp(4rem, 12vw, 7rem);
+  line-height: 0.86;
+}
+
+.temp-unit {
+  color: var(--muted);
+  font-size: clamp(1.25rem, 4vw, 2.15rem);
+  font-weight: 800;
+}
+
+#current-summary {
+  max-width: 36rem;
+  color: var(--muted);
+  font-size: 1.08rem;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+
+.weather-icon {
+  display: grid;
+  place-items: center;
+  flex: 0 0 auto;
+  width: clamp(92px, 18vw, 160px);
+  height: clamp(92px, 18vw, 160px);
+  border-radius: 50%;
+  color: #fff;
+  background: linear-gradient(150deg, var(--sun), var(--rain));
+  font-size: clamp(1.35rem, 4vw, 2.4rem);
+  font-weight: 900;
+}
+
+.metric-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.metric-card {
+  min-height: 126px;
+  padding: 20px;
+}
+
+.metric-card span {
+  display: block;
+  color: var(--muted);
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.metric-card strong {
+  display: block;
+  margin-top: 18px;
+  font-size: clamp(1.45rem, 4vw, 2.4rem);
+  line-height: 1;
+}
+
+.daily-section {
+  margin-top: 18px;
+  padding: 24px;
+}
+
+.section-heading {
+  display: flex;
+  justify-content: space-between;
+  gap: 18px;
+  align-items: end;
+  margin-bottom: 18px;
+}
+
+.section-heading h2 {
+  margin-bottom: 0;
+  font-size: 1.5rem;
+}
+
+.section-heading p {
+  max-width: 520px;
+  margin-bottom: 0;
+  color: var(--muted);
+  line-height: 1.45;
+}
+
+.daily-list {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(120px, 1fr));
+  gap: 12px;
+}
+
+.day-card {
+  min-height: 210px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 16px;
+  background: #f8fbfc;
+}
+
+.day-card.high {
+  border-color: rgba(185, 28, 28, 0.38);
+  background: #fff7ed;
+}
+
+.day-name {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.86rem;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.day-icon {
+  margin: 14px 0;
+  font-size: 1.35rem;
+  font-weight: 900;
+}
+
+.day-temp {
+  display: grid;
+  gap: 4px;
+  margin-bottom: 14px;
+}
+
+.day-temp strong {
+  font-size: 1.28rem;
+}
+
+.day-temp span {
+  color: var(--muted);
+  font-size: 0.95rem;
+}
+
+.day-meta {
+  display: grid;
+  gap: 8px;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.badge {
+  display: inline-flex;
+  width: fit-content;
+  margin-top: 14px;
+  border-radius: 999px;
+  padding: 6px 9px;
+  color: #fff;
+  background: var(--danger);
+  font-size: 0.76rem;
+  font-weight: 900;
+}
+
+.empty-state {
+  grid-column: 1 / -1;
+  padding: 26px;
+  color: var(--muted);
+  text-align: center;
+}
+
+@media (max-width: 900px) {
+  .search-panel,
+  .current-grid,
+  .section-heading {
+    grid-template-columns: 1fr;
+  }
+
+  .section-heading {
+    display: grid;
+    align-items: start;
+  }
+
+  .daily-list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 620px) {
+  .app-shell {
+    padding: 14px;
+  }
+
+  .search-panel,
+  .current-card,
+  .daily-section {
+    padding: 18px;
+  }
+
+  .search-row,
+  .metric-grid,
+  .daily-list {
+    grid-template-columns: 1fr;
+  }
+
+  .current-card {
+    min-height: auto;
+    flex-direction: column;
+  }
+
+  .current-card h2 {
+    flex-wrap: wrap;
+  }
+
+  .weather-icon {
+    width: 96px;
+    height: 96px;
+  }
+}

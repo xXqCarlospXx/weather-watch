@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Weather Forecast</title>
+    <link rel="preconnect" href="https://api.open-meteo.com">
+    <link rel="preconnect" href="https://geocoding-api.open-meteo.com">
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <main class="app-shell">
+      <section class="forecast-workspace" aria-labelledby="app-title">
+        <div class="search-panel">
+          <div>
+            <p class="eyebrow">Public API forecast</p>
+            <h1 id="app-title">Weather Watch</h1>
+          </div>
+
+          <form id="search-form" class="search-form">
+            <label for="location-input">Location</label>
+            <div class="search-row">
+              <input
+                id="location-input"
+                name="location"
+                type="search"
+                autocomplete="off"
+                placeholder="Search city or town"
+                value="Hong Kong"
+                required
+              >
+              <button type="submit" aria-label="Search forecast">
+                <span>Search</span>
+              </button>
+            </div>
+          </form>
+
+          <div class="status-row">
+            <button id="current-location" class="ghost-button" type="button">
+              Use my location
+            </button>
+            <p id="status-message" role="status">Ready to fetch the latest forecast.</p>
+          </div>
+        </div>
+
+        <section id="alert-panel" class="alert-panel is-hidden" aria-live="polite"></section>
+
+        <section class="current-grid" aria-label="Current forecast">
+          <article class="current-card">
+            <div>
+              <p id="place-label" class="eyebrow">Select a location</p>
+              <h2 id="current-temp">--</h2>
+              <p id="current-summary">Forecast will appear here.</p>
+            </div>
+            <div id="current-icon" class="weather-icon" aria-hidden="true">--</div>
+          </article>
+
+          <div class="metric-grid">
+            <article class="metric-card">
+              <span>Wind</span>
+              <strong id="wind-value">--</strong>
+            </article>
+            <article class="metric-card">
+              <span>Rain chance</span>
+              <strong id="rain-value">--</strong>
+            </article>
+            <article class="metric-card">
+              <span>Humidity</span>
+              <strong id="humidity-value">--</strong>
+            </article>
+            <article class="metric-card">
+              <span>Intensity</span>
+              <strong id="intensity-value">--</strong>
+            </article>
+          </div>
+        </section>
+
+        <section class="daily-section" aria-labelledby="daily-title">
+          <div class="section-heading">
+            <h2 id="daily-title">7 Day Forecast</h2>
+            <p>High-intensity days are marked automatically from wind, rain, heat, and storm signals.</p>
+          </div>
+          <div id="daily-list" class="daily-list"></div>
+        </section>
+      </section>
+    </main>
+
+    <script src="app.js" defer></script>
+  </body>
+</html>
